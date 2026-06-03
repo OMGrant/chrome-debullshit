@@ -1,0 +1,33 @@
+{
+  "CommandLineFlagSecurityWarningsEnabled": false,
+  "DefaultBrowserSettingEnabled": false,
+  "PromotionalTabsEnabled": false,
+  "MetricsReportingEnabled": false,
+  "BackgroundModeEnabled": false,
+
+  "GenAiDefaultSettings": 2,
+  "GeminiSettings": 1,
+  "AIModeSettings": 1,
+  "GenAILocalFoundationalModelSettings": 1,
+  "GeminiActOnWebSettings": 1,
+  "SearchContentSharingSettings": 1,
+
+  "PrivacySandboxAdTopicsEnabled": false,
+  "PrivacySandboxSiteEnabledAdsEnabled": false,
+  "PrivacySandboxAdMeasurementEnabled": false,
+  "PrivacySandboxPromptEnabled": false,
+  "PrivacySandboxRelatedWebsiteSetsEnabled": false,
+
+  "UrlKeyedAnonymizedDataCollectionEnabled": false,
+  "ShoppingListEnabled": false,
+  "NTPContentSuggestionsEnabled": false,
+  "NTPCardsVisible": false,
+  "MediaRecommendationsEnabled": false,
+  "FeedbackSurveysEnabled": false,
+
+  "BlockThirdPartyCookies": true,
+  "NetworkPredictionOptions": 2,
+  "PaymentMethodQueryEnabled": false,
+  "SigninInterceptionEnabled": false,
+  "ShowFullUrlsInAddressBar": true
+}

@@ -1,0 +1,35 @@
+Windows Registry Editor Version 5.00
+
+; chrome-debullshit — Google Chrome enterprise policies (Windows)
+; GENERATED from policy/debullshit.json by scripts/generate.sh — do not edit by hand.
+; Double-click to apply, then fully quit and relaunch Chrome. Verify at chrome://policy.
+; Does NOT touch sync, passwords, payments, bookmarks, or extensions.
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Google\Chrome]
+"CommandLineFlagSecurityWarningsEnabled"=dword:00000000
+"DefaultBrowserSettingEnabled"=dword:00000000
+"PromotionalTabsEnabled"=dword:00000000
+"MetricsReportingEnabled"=dword:00000000
+"BackgroundModeEnabled"=dword:00000000
+"GenAiDefaultSettings"=dword:00000002
+"GeminiSettings"=dword:00000001
+"AIModeSettings"=dword:00000001
+"GenAILocalFoundationalModelSettings"=dword:00000001
+"GeminiActOnWebSettings"=dword:00000001
+"SearchContentSharingSettings"=dword:00000001
+"PrivacySandboxAdTopicsEnabled"=dword:00000000
+"PrivacySandboxSiteEnabledAdsEnabled"=dword:00000000
+"PrivacySandboxAdMeasurementEnabled"=dword:00000000
+"PrivacySandboxPromptEnabled"=dword:00000000
+"PrivacySandboxRelatedWebsiteSetsEnabled"=dword:00000000
+"UrlKeyedAnonymizedDataCollectionEnabled"=dword:00000000
+"ShoppingListEnabled"=dword:00000000
+"NTPContentSuggestionsEnabled"=dword:00000000
+"NTPCardsVisible"=dword:00000000
+"MediaRecommendationsEnabled"=dword:00000000
+"FeedbackSurveysEnabled"=dword:00000000
+"BlockThirdPartyCookies"=dword:00000001
+"NetworkPredictionOptions"=dword:00000002
+"PaymentMethodQueryEnabled"=dword:00000000
+"SigninInterceptionEnabled"=dword:00000000
+"ShowFullUrlsInAddressBar"=dword:00000001

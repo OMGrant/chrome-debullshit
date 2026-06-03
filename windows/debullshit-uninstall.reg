@@ -1,0 +1,35 @@
+Windows Registry Editor Version 5.00
+
+; chrome-debullshit — UNINSTALL (Windows)
+; GENERATED from policy/debullshit.json by scripts/generate.sh — do not edit by hand.
+; Removes every value chrome-debullshit set, restoring Chrome's defaults.
+; Double-click to apply, then fully quit and relaunch Chrome.
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Google\Chrome]
+"CommandLineFlagSecurityWarningsEnabled"=-
+"DefaultBrowserSettingEnabled"=-
+"PromotionalTabsEnabled"=-
+"MetricsReportingEnabled"=-
+"BackgroundModeEnabled"=-
+"GenAiDefaultSettings"=-
+"GeminiSettings"=-
+"AIModeSettings"=-
+"GenAILocalFoundationalModelSettings"=-
+"GeminiActOnWebSettings"=-
+"SearchContentSharingSettings"=-
+"PrivacySandboxAdTopicsEnabled"=-
+"PrivacySandboxSiteEnabledAdsEnabled"=-
+"PrivacySandboxAdMeasurementEnabled"=-
+"PrivacySandboxPromptEnabled"=-
+"PrivacySandboxRelatedWebsiteSetsEnabled"=-
+"UrlKeyedAnonymizedDataCollectionEnabled"=-
+"ShoppingListEnabled"=-
+"NTPContentSuggestionsEnabled"=-
+"NTPCardsVisible"=-
+"MediaRecommendationsEnabled"=-
+"FeedbackSurveysEnabled"=-
+"BlockThirdPartyCookies"=-
+"NetworkPredictionOptions"=-
+"PaymentMethodQueryEnabled"=-
+"SigninInterceptionEnabled"=-
+"ShowFullUrlsInAddressBar"=-

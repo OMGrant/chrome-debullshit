@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>chrome-debullshit — strip the AI, ads &amp; nagware out of Chrome</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230a0b0d'/%3E%3Ctext x='50' y='72' font-size='64' font-family='monospace' font-weight='700' fill='%23c7f23f' text-anchor='middle'%3Ed%3C/text%3E%3Cline x1='12' y1='60' x2='88' y2='40' stroke='%23ff5b51' stroke-width='10' stroke-linecap='round'/%3E%3C/svg%3E" />
+<meta name="description" content="A single enterprise-policy file that rips the generative-AI, ad-tracking, and nagware features out of Google Chrome — using Google's own admin controls. Your passwords, payments, and sync stay untouched." />
+<meta property="og:title" content="chrome-debullshit" />
+<meta property="og:description" content="Strip the AI, ad-tracking, and nagware out of Google Chrome with one official enterprise-policy file. Nothing patched, nothing injected, fully reversible." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://omgrant.github.io/chrome-debullshit/" />
+<meta property="og:image" content="https://omgrant.github.io/chrome-debullshit/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="chrome-debullshit" />
+<meta name="twitter:description" content="Strip the AI, ad-tracking, and nagware out of Google Chrome with one official enterprise-policy file." />
+<meta name="twitter:image" content="https://omgrant.github.io/chrome-debullshit/og.png" />
+<style>
+  :root{
+    --bg:#0a0b0d; --panel:#101216; --panel-2:#15181e; --line:#23262e;
+    --ink:#e9ebee; --mut:#8b919c; --faint:#5b616c;
+    --acid:#c7f23f; --acid-dim:#8ea82a; --red:#ff5b51;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+    line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+  }
+  a{color:var(--acid);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  .mono{font-family:var(--mono)}
+
+  /* ---- decorative bleed word ---- */
+  .bleed{
+    position:fixed;top:-4vw;right:-10vw;z-index:0;pointer-events:none;
+    font-family:var(--mono);font-weight:800;font-size:26vw;letter-spacing:-.04em;
+    color:#fff;opacity:.022;white-space:nowrap;transform:rotate(-8deg);
+    text-decoration:line-through;text-decoration-color:var(--red);text-decoration-thickness:.06em;
+  }
+
+  /* ---- nav ---- */
+  nav{position:sticky;top:0;z-index:20;backdrop-filter:blur(10px);
+      background:color-mix(in srgb,var(--bg) 82%,transparent);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;gap:20px;height:60px}
+  .brand{font-family:var(--mono);font-weight:700;letter-spacing:-.02em;color:var(--ink)}
+  .brand b{color:var(--acid)}
+  nav .sp{flex:1}
+  nav a.lnk{color:var(--mut);font-size:14px}
+  nav a.lnk:hover{color:var(--ink);text-decoration:none}
+  .ghbtn{border:1px solid var(--line);padding:7px 14px;border-radius:8px;color:var(--ink);font-size:14px}
+  .ghbtn:hover{border-color:var(--acid);text-decoration:none}
+
+  /* ---- hero ---- */
+  header{position:relative;z-index:1;padding:88px 0 56px}
+  .kicker{font-family:var(--mono);font-size:13px;color:var(--acid-dim);letter-spacing:.04em;margin-bottom:22px}
+  .kicker span{color:var(--faint)}
+  h1{font-size:clamp(40px,7vw,82px);line-height:.98;letter-spacing:-.03em;margin:0 0 22px;font-weight:800}
+  h1 .strike{position:relative;color:var(--mut)}
+  h1 .strike::after{content:"";position:absolute;left:-2%;right:-2%;top:54%;height:.07em;
+    background:var(--red);transform:rotate(-2.5deg);border-radius:2px}
+  .lede{font-size:clamp(17px,2.4vw,21px);color:var(--mut);max-width:620px;margin:0 0 36px}
+  .lede b{color:var(--ink);font-weight:600}
+
+  /* ---- install card ---- */
+  .install{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;max-width:680px}
+  .tabs{display:flex;border-bottom:1px solid var(--line)}
+  .tab{flex:0 0 auto;padding:12px 18px;font-family:var(--mono);font-size:13px;color:var(--mut);
+       background:none;border:0;cursor:pointer;border-bottom:2px solid transparent}
+  .tab:hover{color:var(--ink)}
+  .tab.on{color:var(--acid);border-bottom-color:var(--acid)}
+  .code{position:relative;padding:20px 22px;font-family:var(--mono);font-size:13.5px;line-height:1.7;
+        color:#cfd3da;white-space:pre;overflow-x:auto}
+  .code .c{color:var(--faint)}
+  .code .p{color:var(--acid-dim)}
+  .copy{position:absolute;top:12px;right:12px;border:1px solid var(--line);background:var(--panel-2);
+        color:var(--mut);font-family:var(--mono);font-size:12px;padding:5px 10px;border-radius:7px;cursor:pointer}
+  .copy:hover{color:var(--ink);border-color:var(--acid)}
+  .pane{display:none}.pane.on{display:block}
+  .hero-meta{display:flex;gap:26px;flex-wrap:wrap;margin-top:26px;font-size:14px;color:var(--mut)}
+  .hero-meta b{color:var(--ink)}
+
+  /* ---- section scaffolding ---- */
+  section{position:relative;z-index:1;padding:64px 0;border-top:1px solid var(--line)}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--acid-dim);margin-bottom:14px}
+  h2{font-size:clamp(26px,4vw,38px);letter-spacing:-.02em;margin:0 0 14px;font-weight:800}
+  .sub{color:var(--mut);max-width:640px;margin:0 0 36px}
+
+  /* ---- keep band ---- */
+  .keep{background:linear-gradient(180deg,var(--panel) 0%,var(--bg) 100%)}
+  .keepgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
+  .keepitem{display:flex;align-items:center;gap:10px;padding:14px 16px;border:1px solid var(--line);
+            border-radius:10px;background:var(--panel);font-weight:600}
+  .keepitem .ck{color:var(--acid);font-family:var(--mono)}
+
+  /* ---- kill groups ---- */
+  .group{margin-bottom:40px}
+  .grouphd{display:flex;align-items:baseline;gap:14px;margin-bottom:18px}
+  .grouphd h3{font-size:20px;margin:0;letter-spacing:-.01em}
+  .grouphd .n{font-family:var(--mono);font-size:12px;color:var(--faint);border:1px solid var(--line);
+              padding:2px 8px;border-radius:20px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;transition:border-color .15s,transform .15s}
+  .card:hover{border-color:#34383f;transform:translateY(-2px)}
+  .card .key{font-family:var(--mono);font-size:13px;color:var(--ink);word-break:break-word;display:block;margin-bottom:8px}
+  .card .key::before{content:"✕ ";color:var(--red);font-weight:700}
+  .card.on .key::before{content:"✓ ";color:var(--acid)}
+  .card p{margin:0;color:var(--mut);font-size:14.5px}
+
+  /* ---- how ---- */
+  .how{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+  .step{padding:22px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+  .step .num{font-family:var(--mono);color:var(--acid);font-size:13px;margin-bottom:10px}
+  .step h4{margin:0 0 8px;font-size:16px}
+  .step p{margin:0;color:var(--mut);font-size:14.5px}
+
+  /* ---- faq ---- */
+  details{border:1px solid var(--line);border-radius:10px;padding:2px 18px;margin-bottom:12px;background:var(--panel)}
+  details[open]{border-color:#34383f}
+  summary{cursor:pointer;padding:16px 0;font-weight:600;list-style:none;display:flex;justify-content:space-between;align-items:center}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";font-family:var(--mono);color:var(--acid);font-size:20px}
+  details[open] summary::after{content:"–"}
+  details .a{padding:0 0 18px;color:var(--mut);max-width:760px}
+
+  footer{position:relative;z-index:1;border-top:1px solid var(--line);padding:48px 0;color:var(--faint);font-size:14px}
+  footer a{color:var(--mut)}
+  .disclaimer{margin-top:14px;font-size:12.5px;color:var(--faint);max-width:720px}
+
+  @media(max-width:640px){
+    header{padding:56px 0 36px}
+    .hero-meta{gap:16px}
+  }
+</style>
+</head>
+<body>
+<div class="bleed" aria-hidden="true">bullshit</div>
+
+<nav><div class="wrap">
+  <span class="brand">chrome&#8209;<b>debullshit</b></span>
+  <span class="sp"></span>
+  <a class="lnk" href="#kills">What it kills</a>
+  <a class="lnk" href="#install">Install</a>
+  <a class="lnk" href="#faq">FAQ</a>
+  <a class="ghbtn" href="https://github.com/OMGrant/chrome-debullshit">GitHub ↗</a>
+</div></nav>
+
+<header><div class="wrap">
+  <div class="kicker">open&#8209;source · official enterprise policy · <span>no extensions, nothing injected</span></div>
+  <h1>Chrome, minus<br>the <span class="strike">bullshit</span>.</h1>
+  <p class="lede">One policy file that strips the <b>generative&#8209;AI</b>, <b>ad&#8209;tracking</b>, and <b>nagware</b> out of Google Chrome — using Google's own admin controls. Your <b>passwords, payments, and sync stay exactly where they are.</b></p>
+
+  <div class="install" id="installcard">
+    <div class="tabs" role="tablist">
+      <button class="tab on" data-os="linux">Linux</button>
+      <button class="tab" data-os="windows">Windows</button>
+      <button class="tab" data-os="macos">macOS</button>
+    </div>
+    <div class="pane on" data-os="linux"><div class="code"><button class="copy">copy</button><span class="c"># clone &amp; run — Chrome and Chromium are auto-detected</span>
+git clone https://github.com/OMGrant/chrome-debullshit
+<span class="p">cd</span> chrome-debullshit
+<span class="p">sudo</span> ./install.sh</div></div>
+
+    <div class="pane" data-os="windows"><div class="code"><button class="copy">copy</button><span class="c"># Option A — double-click windows\debullshit.reg</span>
+<span class="c"># Option B — in an Administrator PowerShell:</span>
+git clone https://github.com/OMGrant/chrome-debullshit
+<span class="p">cd</span> chrome-debullshit\windows
+.\install.ps1</div></div>
+
+    <div class="pane" data-os="macos"><div class="code"><button class="copy">copy</button><span class="c"># clone &amp; run</span>
+git clone https://github.com/OMGrant/chrome-debullshit
+<span class="p">cd</span> chrome-debullshit/macos
+<span class="p">sudo</span> ./install.sh</div></div>
+  </div>
+
+  <div class="hero-meta">
+    <div><b>27</b> policies</div>
+    <div><b>0</b> extensions</div>
+    <div><b>1</b> command to undo</div>
+    <div>MIT licensed</div>
+  </div>
+</div></header>
+
+<!-- KEEP -->
+<section class="keep"><div class="wrap">
+  <div class="eyebrow">It does not touch your stuff</div>
+  <h2>Everything you actually use stays.</h2>
+  <p class="sub">This only flips Google's own policy switches. It never reads, exports, or moves your data, and it leaves the parts of Chrome you rely on completely alone.</p>
+  <div class="keepgrid">
+    <div class="keepitem"><span class="ck">✓</span> Passwords</div>
+    <div class="keepitem"><span class="ck">✓</span> Payment methods</div>
+    <div class="keepitem"><span class="ck">✓</span> Account sync</div>
+    <div class="keepitem"><span class="ck">✓</span> Bookmarks</div>
+    <div class="keepitem"><span class="ck">✓</span> Extensions</div>
+    <div class="keepitem"><span class="ck">✓</span> History</div>
+  </div>
+</div></section>
+
+<!-- KILLS -->
+<section id="kills"><div class="wrap">
+  <div class="eyebrow">What it kills</div>
+  <h2>27 switches, five piles of garbage.</h2>
+  <p class="sub">Every entry below is an official Chrome Enterprise policy. Hover a card to read what it shuts off. The exact values live in <a href="https://github.com/OMGrant/chrome-debullshit/blob/main/policy/debullshit.json">policy/debullshit.json</a>.</p>
+
+  <div class="group">
+    <div class="grouphd"><h3>Generative AI &amp; Gemini</h3><span class="n">6 policies</span></div>
+    <div class="cards">
+      <div class="card"><span class="key mono">GenAiDefaultSettings</span><p>Master kill-switch for Chrome's covered generative-AI features — Help me write, Tab organizer, themes, and the rest — set to “disabled.”</p></div>
+      <div class="card"><span class="key mono">GeminiSettings</span><p>Removes the Gemini app integration baked into the browser UI.</p></div>
+      <div class="card"><span class="key mono">AIModeSettings</span><p>Kills “AI Mode” in the address bar and the New Tab page search box.</p></div>
+      <div class="card"><span class="key mono">GenAILocalFoundationalModelSettings</span><p>Stops Chrome downloading and running its on-device AI model — also frees up disk space.</p></div>
+      <div class="card"><span class="key mono">GeminiActOnWebSettings</span><p>Blocks Gemini from taking actions on web pages on your behalf.</p></div>
+      <div class="card"><span class="key mono">SearchContentSharingSettings</span><p>Stops sharing the contents of pages you view with AI Mode.</p></div>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="grouphd"><h3>Ad-tracking — “Privacy Sandbox”</h3><span class="n">5 policies</span></div>
+    <div class="cards">
+      <div class="card"><span class="key mono">PrivacySandboxAdTopicsEnabled</span><p>Disables “Ad Topics” — Chrome profiling your interests in-browser to feed advertisers.</p></div>
+      <div class="card"><span class="key mono">PrivacySandboxSiteEnabledAdsEnabled</span><p>Disables site-suggested ads (the Protected Audience / FLEDGE auction API).</p></div>
+      <div class="card"><span class="key mono">PrivacySandboxAdMeasurementEnabled</span><p>Disables in-browser ad conversion measurement.</p></div>
+      <div class="card"><span class="key mono">PrivacySandboxPromptEnabled</span><p>Suppresses the Privacy Sandbox consent pop-up entirely.</p></div>
+      <div class="card"><span class="key mono">PrivacySandboxRelatedWebsiteSetsEnabled</span><p>Disables “Related Website Sets” — the mechanism that lets a company’s family of domains share your identity across sites.</p></div>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="grouphd"><h3>Tracking &amp; privacy hardening</h3><span class="n">3 policies</span></div>
+    <div class="cards">
+      <div class="card on"><span class="key mono">BlockThirdPartyCookies</span><p>Turns on third-party cookie blocking by default — the classic cross-site tracking vector.</p></div>
+      <div class="card"><span class="key mono">NetworkPredictionOptions</span><p>Stops speculative prefetching and preconnecting — Chrome phoning ahead to sites and resolving DNS before you’ve clicked.</p></div>
+      <div class="card"><span class="key mono">PaymentMethodQueryEnabled</span><p>Stops sites silently probing whether you have payment cards saved.</p></div>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="grouphd"><h3>Nagware &amp; dark patterns</h3><span class="n">10 policies</span></div>
+    <div class="cards">
+      <div class="card"><span class="key mono">CommandLineFlagSecurityWarningsEnabled</span><p>Removes the scary “you are using an unsupported command-line flag” banner.</p></div>
+      <div class="card"><span class="key mono">DefaultBrowserSettingEnabled</span><p>Stops the “Make Chrome your default browser” pestering.</p></div>
+      <div class="card"><span class="key mono">PromotionalTabsEnabled</span><p>No promotional or “what’s new” welcome tabs after updates.</p></div>
+      <div class="card"><span class="key mono">ShoppingListEnabled</span><p>Kills the price-tracking and shopping “insights” nags.</p></div>
+      <div class="card"><span class="key mono">NTPContentSuggestionsEnabled</span><p>Removes the Discover content feed from the New Tab page.</p></div>
+      <div class="card"><span class="key mono">MediaRecommendationsEnabled</span><p>No “recommended media” suggestions.</p></div>
+      <div class="card"><span class="key mono">NTPCardsVisible</span><p>Removes the cards (weather, recipes, and the rest) from the New Tab page.</p></div>
+      <div class="card"><span class="key mono">SigninInterceptionEnabled</span><p>Kills the “create a profile for this account?” interruption pop-ups.</p></div>
+      <div class="card"><span class="key mono">FeedbackSurveysEnabled</span><p>Blocks the random “how satisfied are you?” survey pop-ups.</p></div>
+      <div class="card on"><span class="key mono">ShowFullUrlsInAddressBar</span><p>Undoes Chrome hiding the full URL — shows the real <span class="mono">https://</span> and path instead of a trimmed, spoofable display.</p></div>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="grouphd"><h3>Phone-home &amp; telemetry</h3><span class="n">3 policies</span></div>
+    <div class="cards">
+      <div class="card"><span class="key mono">MetricsReportingEnabled</span><p>Opts out of usage-statistics and crash reporting to Google.</p></div>
+      <div class="card"><span class="key mono">UrlKeyedAnonymizedDataCollectionEnabled</span><p>Stops sending the URLs you visit to Google to “improve” Chrome.</p></div>
+      <div class="card"><span class="key mono">BackgroundModeEnabled</span><p>Chrome fully exits when you close it — no lingering background process.</p></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- HOW -->
+<section><div class="wrap">
+  <div class="eyebrow">How it works</div>
+  <h2>It’s just Chrome’s own admin controls.</h2>
+  <p class="sub">No binary patching. No extension reading your tabs. No injected code. The same managed-policy mechanism corporate IT uses to lock browsers down — pointed, for once, at the stuff <em>you</em> don’t want.</p>
+  <div class="how">
+    <div class="step"><div class="num">01</div><h4>Drops one policy file</h4><p>A JSON file on Linux/macOS, registry values on Windows — read straight from Google’s documented policy list.</p></div>
+    <div class="step"><div class="num">02</div><h4>Chrome reads it at launch</h4><p>Relaunch and the features are gone. Check <span class="mono">chrome://policy</span> to see every one applied.</p></div>
+    <div class="step"><div class="num">03</div><h4>Survives updates</h4><p>Policies aren’t reset by Chrome updates the way flags and settings often are.</p></div>
+    <div class="step"><div class="num">04</div><h4>Reverses in one command</h4><p>Run the installer with <span class="mono">--uninstall</span> (or the uninstall <span class="mono">.reg</span>) and you’re back to stock.</p></div>
+  </div>
+</div></section>
+
+<!-- INSTALL -->
+<section id="install"><div class="wrap">
+  <div class="eyebrow">Install &amp; uninstall</div>
+  <h2>Two minutes, fully reversible.</h2>
+  <p class="sub">Pick your platform at the top of the page for the install command. To undo everything:</p>
+  <div class="install" style="max-width:680px">
+    <div class="code"><button class="copy">copy</button><span class="c"># Linux / macOS</span>
+<span class="p">sudo</span> ./install.sh --uninstall
+
+<span class="c"># Windows — double-click windows\debullshit-uninstall.reg</span>
+<span class="c"># …or in an Administrator PowerShell:</span>
+.\install.ps1 -Uninstall</div>
+  </div>
+  <p class="sub" style="margin-top:28px">Then fully quit Chrome (<span class="mono">Ctrl+Q</span> / <span class="mono">Cmd+Q</span>), relaunch, and open <span class="mono">chrome://policy</span> → <b>Reload policies</b>. Every entry should read <b>OK</b>.</p>
+</div></section>
+
+<!-- FAQ -->
+<section id="faq"><div class="wrap">
+  <div class="eyebrow">Questions</div>
+  <h2>The obvious ones.</h2>
+  <details><summary>Will this break my password / payment sync?</summary><div class="a">No. None of these policies touch sign-in, sync, passwords, or autofill data. They only disable AI, ad-tracking, nag, and telemetry features. Your Google account and everything synced to it are untouched.</div></details>
+  <details><summary>Is it safe? What is it actually doing?</summary><div class="a">It writes a list of <a href="https://chromeenterprise.google/policies/">official Chrome Enterprise policies</a> — the same documented mechanism IT departments use to manage browsers. Nothing is patched, injected, or downloaded. You can read the entire policy file before installing; it’s a few dozen lines.</div></details>
+  <details><summary>Why not just use an extension?</summary><div class="a">Extensions can’t reach browser-level UI — the AI features, the nag banners, the Privacy Sandbox prompts all live in Chrome’s own chrome, which extensions are sandboxed away from. Policies are the only thing that can switch these off, and they don’t need access to your browsing.</div></details>
+  <details><summary>Will a Chrome update undo it?</summary><div class="a">Policies are far stickier than flags or settings toggles — updates generally leave them in place. The catch: Google ships new AI features over time, occasionally with their own new policy. Glance at <span class="mono">chrome://policy</span> after big updates; if something new appears, open an issue and we’ll add a line.</div></details>
+  <details><summary>Does it work on Chromium or Edge?</summary><div class="a">The Linux installer targets <b>Chrome and Chromium</b> — the browsers built around Chrome's policy vocabulary. Edge is also Chromium-based but ships its own Copilot stack and reads policies from its own paths; PRs to add a proper Edge set are welcome.</div></details>
+  <details><summary>Can I pick and choose which ones to apply?</summary><div class="a">Yes — <span class="mono">policy/debullshit.json</span> is the single source of truth. Delete any line you want to keep (or add your own), then run <span class="mono">scripts/generate.sh</span> to rebuild the Windows <span class="mono">.reg</span> and macOS files from it. A few stricter policies (search suggestions, server-side spellcheck, DNS-over-HTTPS) are left out by default because they trade away a feature or break some networks — see the README for the list and reasons.</div></details>
+</div></section>
+
+<footer><div class="wrap">
+  <div><span class="brand">chrome&#8209;<b>debullshit</b></span> — <a href="https://github.com/OMGrant/chrome-debullshit">source on GitHub</a> · MIT licensed</div>
+  <p class="disclaimer">Not affiliated with, endorsed by, or sponsored by Google LLC. “Google Chrome” and “Chromium” are trademarks of Google LLC. This project simply applies Google’s own publicly documented enterprise policies. Use at your own discretion.</p>
+</div></footer>
+
+<script>
+  // OS tab switching (hero install card)
+  const tabs=document.querySelectorAll('.tab');
+  tabs.forEach(t=>t.addEventListener('click',()=>{
+    const os=t.dataset.os;
+    document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.dataset.os===os));
+    document.querySelectorAll('#installcard .pane').forEach(p=>p.classList.toggle('on',p.dataset.os===os));
+  }));
+  // Copy buttons
+  document.querySelectorAll('.copy').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const code=btn.parentElement;
+      const text=code.innerText.replace(/^copy\s*/,'').trim();
+      navigator.clipboard.writeText(text).then(()=>{
+        const old=btn.textContent;btn.textContent='copied ✓';
+        setTimeout(()=>btn.textContent=old,1400);
+      });
+    });
+  });
+</script>
+</body>
+</html>

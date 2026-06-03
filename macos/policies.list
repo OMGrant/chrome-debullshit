@@ -1,0 +1,29 @@
+# GENERATED from policy/debullshit.json by scripts/generate.sh — do not edit by hand.
+# name:type:value  — consumed by macos/install.sh
+CommandLineFlagSecurityWarningsEnabled:bool:false
+DefaultBrowserSettingEnabled:bool:false
+PromotionalTabsEnabled:bool:false
+MetricsReportingEnabled:bool:false
+BackgroundModeEnabled:bool:false
+GenAiDefaultSettings:int:2
+GeminiSettings:int:1
+AIModeSettings:int:1
+GenAILocalFoundationalModelSettings:int:1
+GeminiActOnWebSettings:int:1
+SearchContentSharingSettings:int:1
+PrivacySandboxAdTopicsEnabled:bool:false
+PrivacySandboxSiteEnabledAdsEnabled:bool:false
+PrivacySandboxAdMeasurementEnabled:bool:false
+PrivacySandboxPromptEnabled:bool:false
+PrivacySandboxRelatedWebsiteSetsEnabled:bool:false
+UrlKeyedAnonymizedDataCollectionEnabled:bool:false
+ShoppingListEnabled:bool:false
+NTPContentSuggestionsEnabled:bool:false
+NTPCardsVisible:bool:false
+MediaRecommendationsEnabled:bool:false
+FeedbackSurveysEnabled:bool:false
+BlockThirdPartyCookies:bool:true
+NetworkPredictionOptions:int:2
+PaymentMethodQueryEnabled:bool:false
+SigninInterceptionEnabled:bool:false
+ShowFullUrlsInAddressBar:bool:true
